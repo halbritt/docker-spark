@@ -10,3 +10,4 @@
 # Push
 
     make push SPARK_IMAGE=[REGISTRY_HOST/][USERNAME]
+# docker-spark
