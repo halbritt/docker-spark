@@ -1,5 +1,5 @@
-LOCAL_IMAGE=openshift-spark
-SPARK_IMAGE=mattf/openshift-spark
+LOCAL_IMAGE=docker-spark
+SPARK_IMAGE=halbritt/docker-spark
 
 # If you're pushing to an integrated registry
 # in Openshift, SPARK_IMAGE will look something like this

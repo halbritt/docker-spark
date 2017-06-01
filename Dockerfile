@@ -1,10 +1,10 @@
 FROM centos:latest
 
-MAINTAINER Matthew Farrellee <matt@cs.wisc.edu>
+MAINTAINER Heath Albritton halbritton@sightmachine.com
 
 USER root
-ARG DISTRO_LOC=https://archive.apache.org/dist/spark/spark-2.1.0/spark-2.1.0-bin-hadoop2.7.tgz
-ARG DISTRO_NAME=spark-2.1.0-bin-hadoop2.7
+ARG DISTRO_LOC=https://archive.apache.org/dist/spark/spark-2.1.1/spark-2.1.1-bin-hadoop2.7.tgz
+ARG DISTRO_NAME=spark-2.1.1-bin-hadoop2.7
 
 RUN yum install -y epel-release tar java && \
     yum clean all
@@ -33,7 +33,7 @@ RUN [ "bash", "-x", "/tmp/scripts/spark/install" ]
 RUN rm -rf /tmp/scripts
 
 # Switch to the user 185 for OpenShift usage
-USER 185
+# USER 185
 
 # Make the default PWD somewhere that the user can write. This is
 # useful when connecting with 'oc run' and starting a 'spark-shell',
