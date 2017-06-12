@@ -28,6 +28,10 @@ ENV PYTHONHASHSEED 0
 ENV PYTHONIOENCODING UTF-8
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
+# spark env
+ENV SPARK_DAEMON_JAVA_OPTS "-Djava.net.preferIPv4Stack=true -Dcom.amazonaws.services.s3.enableV4=true"
+
+
 USER root
 ARG DISTRO_LOC=https://archive.apache.org/dist/spark/spark-2.1.1/spark-2.1.1-bin-hadoop2.7.tgz
 ARG DISTRO_NAME=spark-2.1.1-bin-hadoop2.7
