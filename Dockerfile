@@ -37,11 +37,11 @@ RUN cd /opt && \
         tar -zx && \
     ln -s $DISTRO_NAME spark
 
-RUN curl https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.11.145/aws-java-sdk-1.11.145.jar \
-  -o /opt/spark/lib/aws-java-sdk-1.11.145.jar
+RUN curl https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar \
+ -o /opt/spark/jars/aws-java-sdk-1.7.4.jar
 
 RUN curl http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar \
-  -o /opt/spark/lib/hadoop-aws-2.7.3.jar
+ -o /opt/spark/jars/hadoop-aws-2.7.3.jar
 
 WORKDIR /opt/spark
 CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
