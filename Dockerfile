@@ -32,11 +32,15 @@ ENV PYTHONIOENCODING UTF-8
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
 # spark env
-ENV SPARK_DAEMON_JAVA_OPTS "-Djava.net.preferIPv4Stack=true -Dcom.amazonaws.services.s3.enableV4=true"
-
+ENV SPARK_DAEMON_JAVA_OPTS "-Djava.net.preferIPv4Stack=true \
+ -Dcom.amazonaws.services.s3.enableV4=true" \
+ -XX:+UnlockExperimentalVMOptions \
+ -XX:+UseCGroupMemoryLimitForHeap" 
 
 USER root
-ARG DISTRO_LOC=https://archive.apache.org/dist/spark/spark-2.1.1/spark-2.1.1-bin-hadoop2.7.tgz
+
+# ARG DISTRO_LOC=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
+ARG DISTRO_LOC=http://172.17.0.3:9000/spark/spark-2.1.1-bin-hadoop2.7.tgz
 ARG DISTRO_NAME=spark-2.1.1-bin-hadoop2.7
 
 RUN cd /opt && \
