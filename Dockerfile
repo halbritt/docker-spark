@@ -1,6 +1,9 @@
 FROM openjdk:8
 MAINTAINER Getty Images "https://github.com/gettyimages"
 
+# set DNS cache TTL for Java to something other than infinity
+RUN echo "networkaddress.cache.ttl=60" >> $JAVA_HOME/jre/lib/security/java.security
+
 RUN apt-get update \
  && apt-get install -y locales \
  && dpkg-reconfigure -f noninteractive locales \

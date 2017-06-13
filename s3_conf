@@ -3,3 +3,10 @@ spark.hadoop.fs.s3a.access.key=ACCESSKEY
 spark.hadoop.fs.s3a.secret.key=SECRETKEY  
 spark.hadoop.fs.s3a.fast.upload=true
 spark.hadoop.fs.s3a.endpoint=http://172.17.0.3:9000
+# enable for parquet spark.hadoop.fs.s3a.experimental.input.fadvise=random
+
+# tuning for parquet in S3
+spark.hadoop.parquet.enable.summary-metadata=false
+spark.sql.parquet.mergeSchema=false
+spark.sql.parquet.filterPushdown=true
+spark.sql.hive.metastorePartitionPruning=true
