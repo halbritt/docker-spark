@@ -1,11 +1,17 @@
 FROM openjdk:8
-MAINTAINER Getty Images "https://github.com/gettyimages"
 
 # set DNS cache TTL for Java to something other than infinity
 RUN echo "networkaddress.cache.ttl=60" >> $JAVA_HOME/jre/lib/security/java.security
 
+# R repository
+RUN apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+RUN echo "deb http://cran.r-project.org/bin/linux/debian jessie-cran34/" > /etc/apt/sources.list.d/cran_r_project.list
+
+# look at all this good stuff, bloat?  what bloat?
 RUN apt-get update \
- && apt-get install -y locales \
+ && apt-get install -y --force-yes --no-install-recommends \
+ locales curl python3 python3-setuptools python3-pip \
+ r-base r-base-dev r-recommended \
  && dpkg-reconfigure -f noninteractive locales \
  && locale-gen C.UTF-8 \
  && /usr/sbin/update-locale LANG=C.UTF-8 \
@@ -14,17 +20,19 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+#pyspark needs py4j
+RUN pip3 install py4j
+
 # Users with other locales should set this in their derivative image
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-RUN apt-get update \
- && apt-get install -y curl unzip \
-    python3 python3-setuptools \
- && easy_install3 pip py4j \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+# Add Tini
+ENV TINI_VERSION v0.14.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
 
 # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
 ENV PYTHONHASHSEED 0
@@ -39,20 +47,16 @@ ENV SPARK_DAEMON_JAVA_OPTS "-Djava.net.preferIPv4Stack=true \
 
 USER root
 
-# ARG DISTRO_LOC=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
+#ARG DISTRO_LOC=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
 ARG DISTRO_LOC=http://172.17.0.3:9000/spark/spark-2.1.1-bin-hadoop2.7.tgz
 ARG DISTRO_NAME=spark-2.1.1-bin-hadoop2.7
 
 RUN cd /opt && \
-    curl $DISTRO_LOC  | \
-        tar -zx && \
-    ln -s $DISTRO_NAME spark
+ curl $DISTRO_LOC | tar -zx && \
+ ln -s $DISTRO_NAME spark
 
-RUN curl https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar \
- -o /opt/spark/jars/aws-java-sdk-1.7.4.jar
-
-RUN curl http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar \
- -o /opt/spark/jars/hadoop-aws-2.7.3.jar
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar /opt/spark/jars/
+ADD http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar /opt/spark/jars/
 
 WORKDIR /opt/spark
 CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
