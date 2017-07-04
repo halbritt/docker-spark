@@ -15,7 +15,7 @@ master:
     - 7077
     - 6066
   volumes:
-    - ./conf/master:/conf
+    - ./conf:/conf
     - ./data:/tmp/data
 
 worker:
@@ -24,7 +24,7 @@ worker:
   hostname: worker
   environment:
     SPARK_CONF_DIR: /conf
-    SPARK_WORKER_CORES:
+    SPARK_WORKER_CORES: 1
     SPARK_WORKER_MEMORY: 1g
     SPARK_WORKER_PORT: 8881
     SPARK_WORKER_WEBUI_PORT: 8081
@@ -38,5 +38,5 @@ worker:
     - 7016
     - 8881
   volumes:
-    - ./conf/worker:/conf
+    - ./conf:/conf
     - ./data:/tmp/data
