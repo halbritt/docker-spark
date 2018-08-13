@@ -1,4 +1,4 @@
-FROM openjdk:8u131-jdk-alpine
+FROM openjdk:8-alpine
 MAINTAINER Heath Albritton halbritt@gmail.com
 
 ENV LC_ALL en_US.UTF-8 \
@@ -9,10 +9,9 @@ ENV LC_ALL en_US.UTF-8 \
     PYSPARK_PYTHON=python2.7
 
 #ARG
-ARG SPARK_PACKAGE=spark-2.1.1-bin-hadoop2.7
-ARG SPARK_URL=http://172.17.0.2:9000/spark
-    # or the cloudfront mirror
-    #https://d3kbcqa49mib13.cloudfront.net
+ARG SPARK_PACKAGE=spark-2.3.1-bin-hadoop2.7
+ARG SPARK_URL=https://d3kbcqa49mib13.cloudfront.net
+ARG SPARK_URL=http://mirror.olnevhost.net/pub/apache/spark/spark-2.3.1/
 
 RUN apk --no-cache upgrade \
     && apk --no-cache add bash \
